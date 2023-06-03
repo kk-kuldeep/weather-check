@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Weather App</title>
+  <style>
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Weather App</h1>
+  <input type="text" id="cityInput" placeholder="Enter city names (comma-separated)">
+  <button onclick="getWeather()">Get Weather</button>
+  <div id="result"></div>
+
+  <script>
+    function getWeather() {
+      const cityInput = document.getElementById('cityInput');
+      const resultDiv = document.getElementById('result');
+      resultDiv.textContent = 'Loading...';
+
+      const cities = cityInput.value.split(',');
+      const requestBody = { cities };
+
+      fetch('http://localhost:3000/getWeather', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      })
+      .then(response => response.json())
+      .then(data => {
+        resultDiv.textContent = JSON.stringify(data.weather, null, 2);
+      })
+      .catch(error => {
+        console.error(error);
+        resultDiv.textContent = 'Failed to fetch weather data';
+      });
+    }
+  </script>
+</body>
+</html>
